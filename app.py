@@ -6,13 +6,14 @@ app = Flask(__name__)
 mysql_db = MySQLDatabase('cast_watch', user='root', password='Woxnsk19', host='localhost', port=3306)
 mysql_db.connect()
 
+
 class BaseModel(Model):
     class Meta:
         database = mysql_db
         
 
 class Movie(BaseModel):
-    id = AutoField(primary_key=True)
+    id = IntegerField(primary_key=True)
     title = CharField(max_length=300, unique=True)
     overview = CharField(max_length=2000)
     release_date = CharField(max_length=12)
@@ -28,9 +29,10 @@ class User(BaseModel):
 
 # User_Movie class
 class User_Movie(BaseModel):
-    id = AutoField(primary_key=True)
+    id = IntegerField(primary_key=True)
     user_id = ForeignKeyField(User)
     movie_id = ForeignKeyField(Movie)
+
 
 # Movie Schema
 class MovieSchema(Schema):
@@ -41,9 +43,9 @@ class MovieSchema(Schema):
     poster_path = fields.Str()
 
 
-
 @app.route('/')
 def index():
+    print(request.json['name'])
     return 'Good to go!'
 
 @app.route('/movies')
@@ -51,10 +53,18 @@ def get_movies():
     query = Movie.select().order_by(Movie.title).dicts()
     return jsonify({'movies':list(query)})
 
-@app.route('/library/<userId>')
+
+@app.route('/library/get/<userId>')
 def get_library(userId):
-    query = Movie.select().join(User_Movie).where(User_Movie.user_id == userId).order_by(User_Movie.id).dicts()
+    query = Movie.select().join(User_Movie).distinct().where(User_Movie.user_id == userId).order_by(User_Movie.id).dicts()
     return jsonify({'library':list(query)})
+
+
+@app.route('/library/add/<userId>')
+def add_library(userId):
+    Movie.create(id=263115, title='Logan', overview="In the near future, a weary Logan cares for an ailing Professor X in a hideout on the Mexican border. But Logan's attempts to hide from the world and his legacy are upended when a young mutant arrives, pursued by dark forces.", release_date='2017-02-28', poster_path='/fnbjcRDYn6YviCcePDnGdyAkYsB.jpg')
+    User_Movie.create(user_id=userId, movie_id=263115)
+    return '200'
 
 # run server
 if __name__ == '__main__':
