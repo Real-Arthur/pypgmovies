@@ -1,5 +1,6 @@
-from flask import Flask, request, jsonify
+from flask import Flask, request, jsonify, json
 from peewee import *
+from marshmallow import Schema, fields
 
 app = Flask(__name__)
 mysql_db = MySQLDatabase('cast_watch', user='root', password='Woxnsk19', host='localhost', port=3306)
@@ -28,8 +29,17 @@ class User(BaseModel):
 # User_Movie class
 class User_Movie(BaseModel):
     id = AutoField(primary_key=True)
-    user_id = IntegerField()
-    movie_id = IntegerField()
+    user_id = ForeignKeyField(User)
+    movie_id = ForeignKeyField(Movie)
+
+# Movie Schema
+class MovieSchema(Schema):
+    id = fields.Int()
+    title = fields.Str()
+    overview = fields.Str()
+    release_date = fields.Str()
+    poster_path = fields.Str()
+
 
 
 @app.route('/')
@@ -38,9 +48,13 @@ def index():
 
 @app.route('/movies')
 def get_movies():
-    query = Movie.select()
-    print(query)
-    return jsonify([movie.title for movie in query])
+    query = Movie.select().order_by(Movie.title).dicts()
+    return jsonify({'movies':list(query)})
+
+@app.route('/library/<userId>')
+def get_library(userId):
+    query = Movie.select().join(User_Movie).where(User_Movie.user_id == userId).order_by(User_Movie.id).dicts()
+    return jsonify({'library':list(query)})
 
 # run server
 if __name__ == '__main__':
