@@ -45,7 +45,7 @@ class MovieSchema(Schema):
 
 def index():
     print(request.json['name'])
-    return 'Good to go!'
+    return request.json('Good to go!')
 
 # Get all movies from database
 def get_movies():
@@ -59,6 +59,6 @@ def get_library(userId):
 
 # Add movie to user's collection
 def add_library(userId):
-    Movie.create(id=263115, title='Logan', overview="In the near future, a weary Logan cares for an ailing Professor X in a hideout on the Mexican border. But Logan's attempts to hide from the world and his legacy are upended when a young mutant arrives, pursued by dark forces.", release_date='2017-02-28', poster_path='/fnbjcRDYn6YviCcePDnGdyAkYsB.jpg')
-    User_Movie.create(user_id=userId, movie_id=263115)
+    Movie.insert(id=request.json['id'], title=request.json['title'], overview=request.json['overview'], release_date=request.json['release_date'], poster_path=request.json['poster_path']).on_conflict_ignore(ignore=True)
+    User_Movie.insert(user_id=userId, movie_id=request.json['id']).on_conflict_ignore(ignore=True)
     return '200'
