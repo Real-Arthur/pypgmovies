@@ -74,6 +74,17 @@ def get_details():
     # return results
     return results
 
+# Searches The Movie Database API for filmography of selected person
+# Data provided by api.py get_filmography
+@app.route('/api/filmography', methods=['GET'])
+def get_filmography():
+    data = request.json['query']
+    print(f'data {data}')
+    results = api.get_filmography(data)
+    # print(results)
+    # return results
+    return results
+
 # run server
 if __name__ == '__main__':
     app.run(debug=True)

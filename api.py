@@ -40,3 +40,9 @@ def get_details(value):
     resp = requests.get(f'https://api.themoviedb.org/3/movie/{value}?api_key={settings.API_KEY}')
     data = resp.json()
     return jsonify(data)
+
+# Searches The Movie Database API for filmography of person by id
+def get_filmography(value):
+    resp = requests.get(f'https://api.themoviedb.org/3/person/{value}/movie_credits?api_key={settings.API_KEY}')
+    data = resp.json()
+    return jsonify(data)
