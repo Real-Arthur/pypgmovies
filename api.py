@@ -34,3 +34,9 @@ def get_cast(value):
     resp = requests.get(f'https://api.themoviedb.org/3/movie/{value}/credits?api_key={settings.API_KEY}')
     data = resp.json()
     return jsonify(data)
+
+# Searches The Movie Database API for details about a queried movie by movie id
+def get_details(value):
+    resp = requests.get(f'https://api.themoviedb.org/3/movie/{value}?api_key={settings.API_KEY}')
+    data = resp.json()
+    return jsonify(data)

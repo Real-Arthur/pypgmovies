@@ -63,6 +63,17 @@ def get_cast():
     # return results
     return results
 
+# Searches The Movie Database API for details about a selected movie
+# Data provided by api.py get_details
+@app.route('/api/details', methods=['GET'])
+def get_details():
+    data = request.json['query']
+    print(f'data {data}')
+    results = api.get_details(data)
+    # print(results)
+    # return results
+    return results
+
 # run server
 if __name__ == '__main__':
     app.run(debug=True)
