@@ -2,8 +2,9 @@ from flask import Flask, request, jsonify, json
 from peewee import *
 from marshmallow import Schema, fields
 import database
+import settings
 
-mysql_db = MySQLDatabase('cast_watch', user='root', password='Woxnsk19', host='localhost', port=3306)
+mysql_db = MySQLDatabase('cast_watch', user='root', password=settings.DB_PASSWORD, host='localhost', port=3306)
 mysql_db.connect()
 
 
