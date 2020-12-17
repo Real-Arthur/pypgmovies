@@ -41,12 +41,24 @@ def get_person():
     # return results
     return results
 
-
+# Searches The Movie Database API for queried actor/actress
+# Data provided by api.py get_title
 @app.route('/api/title', methods=['GET', 'POST'])
 def get_title():
     data = request.get_json()
     print(data)
     results = api.get_title(data)
+    # print(results)
+    # return results
+    return results
+
+# Searches The Movie Database API for the cast of a queried movie by movie id
+# Data provided by api.py get_cast
+@app.route('/api/cast', methods=['GET'])
+def get_cast():
+    data = request.json['query']
+    print(f'data {data}')
+    results = api.get_cast(data)
     # print(results)
     # return results
     return results
